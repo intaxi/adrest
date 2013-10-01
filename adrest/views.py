@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from .mixin import auth, emitter, handler, parser, throttle
-from .settings import ALLOW_OPTIONS, DEBUG, NOTIFY_ERRORS
+from adrest.settings import ALLOW_OPTIONS, DEBUG, NOTIFY_ERRORS
 from .signals import api_request_started, api_request_finished
 from .utils import status, MetaOptions
 from .utils.exceptions import HttpError, FormError

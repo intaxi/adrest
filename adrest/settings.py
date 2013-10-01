@@ -25,7 +25,7 @@ LIMIT_PER_PAGE = int(getattr(settings, 'ADREST_LIMIT_PER_PAGE', 50))
 DEBUG = getattr(settings, 'ADREST_DEBUG', False)
 MAIL_ERRORS = as_tuple(getattr(settings, 'ADREST_MAIL_ERRORS', 500))
 
-NOTIFY_ERROR = as_tuple(getattr(settings, 'ADREST_NOTIFY_ERRORS', 500))
+NOTIFY_ERRORS = as_tuple(getattr(settings, 'ADREST_NOTIFY_ERRORS', 500))
 
 # Limit request number per second from same identifier, null is not limited
 THROTTLE_AT = getattr(settings, 'ADREST_THROTTLE_AT', 120)
