@@ -328,6 +328,7 @@ class ResourceView(handler.HandlerMixin,
         return self.meta.name
 
 
+    @staticmethod
     def process_errors(response, request):
 
         if response.status_code not in NOTIFY_ERRORS:
