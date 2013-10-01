@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from .mixin import auth, emitter, handler, parser, throttle
-from .settings import ALLOW_OPTIONS, DEBUG, MAIL_ERRORS
+from .settings import ALLOW_OPTIONS, DEBUG, NOTIFY_ERRORS
 from .signals import api_request_started, api_request_finished
 from .utils import status, MetaOptions
 from .utils.exceptions import HttpError, FormError
@@ -22,6 +22,7 @@ from .utils.tools import as_tuple, gen_url_name, gen_url_regex, fix_request
 
 
 logger = getLogger('django.request')
+api_logger = getLogger('api.error')
 
 
 __all__ = 'ResourceView',
@@ -179,7 +180,7 @@ class ResourceView(handler.HandlerMixin,
         response["Vary"] = 'Authenticate, Accept'
 
         # Send errors on mail
-        errors_mail(response, request)
+        self.process_errors(response, request)
 
         # Send finished signal
         api_request_finished.send(
@@ -327,28 +328,16 @@ class ResourceView(handler.HandlerMixin,
         return self.meta.name
 
 
-def errors_mail(response, request):
+    def process_errors(response, request):
 
-    if not response.status_code in MAIL_ERRORS:
-        return False
+        if response.status_code not in NOTIFY_ERRORS:
+            return False
 
-    subject = 'ADREST API Error (%s): %s' % (
-        response.status_code, request.path)
-    stack_trace = '\n'.join(traceback.format_exception(*sys.exc_info()))
-    message = """
-Stacktrace:
-===========
-%s
-
-Handler data:
-=============
-%s
-
-Request information:
-====================
-%s
-
-""" % (stack_trace, repr(getattr(request, 'data', None)), repr(request))
-    return mail_admins(subject, message, fail_silently=True)
+        api_logger.error("ADREST API Error {0}: {1}".format(response.status_code, request.path),
+                         exc_info=True,
+                         extra={"data": {
+                             "request_data": getattr(request, 'data', None),
+                             "response_data": response.content},
+                                'stack': True})
 
 # pymode:lint_ignore=E1120,W0703
