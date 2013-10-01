@@ -1,3 +1,10 @@
+"""
+**ADRest** is an API framework for Django. It supports REST_ and RPC_
+paradigms.
+
+:copyright: 2013 by Kirill Klenov.
+:license: BSD, see LICENSE for more details.
+"""
 version_info = (2, 1, 4)
 
 __version__ = version = '.'.join(map(str, version_info))
@@ -7,8 +14,12 @@ __license__ = LICENSE = "GNU LGPL"
 
 try:
     from django.conf import settings as django_settings # nolint
-    if not 'adrest' in django_settings.INSTALLED_APPS:
-        import logging
-        logging.warn('You should add "adrest" to INSTALLED_APPS.')
+    if django_settings.configured:
+        if not 'adrest' in django_settings.INSTALLED_APPS:
+            import logging
+            logging.warn('You should added "adrest" to INSTALLED_APPS.')
+
 except ImportError:
     pass
+
+# lint_ignore=W402
