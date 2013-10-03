@@ -5,7 +5,7 @@ paradigms.
 :copyright: 2013 by Kirill Klenov.
 :license: BSD, see LICENSE for more details.
 """
-version_info = (2, 1, 7)
+version_info = (2, 1, 8)
 
 __version__ = version = '.'.join(map(str, version_info))
 __project__ = PROJECT = __name__

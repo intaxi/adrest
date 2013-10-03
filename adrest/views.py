@@ -337,8 +337,9 @@ class ResourceView(handler.HandlerMixin,
         api_logger.error("ADREST API Error {0}: {1}".format(response.status_code, request.path),
                          exc_info=True,
                          extra={"data": {
-                             "request_data": getattr(request, 'data', None),
-                             "response_data": response.content},
+                             "request_data": repr(getattr(request, 'data', {})),
+                             "response_data": response.content,
+                             "request": repr(request)},
                                 'stack': True})
 
 # pymode:lint_ignore=E1120,W0703
